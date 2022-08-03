@@ -4,12 +4,14 @@
 
 <h1>Users</h1>
 
-{% for user of users %}
+{% for user in users %}
 
-<li><a href="/{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</a></li>
-
-<button type=submit action="/create">Add new user</button>
+<li><a href="/users/{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</a></li>
 
 {% endfor %}
+
+<form action="/users/new">
+  <button type="submit">Add new user</button>
+</form>
 
 {% endblock %}

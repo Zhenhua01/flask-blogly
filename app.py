@@ -18,18 +18,22 @@ db.create_all()
 
 @app.get("/")
 def homepage():
-    """ user homepage with list of users and show add button."""
+    """ redirects to user homepage. """
     return redirect("/users")
 
 @app.get("/users")
 def users():
-    """ user homepage with list of users and show add button."""
+    """ shows user homepage with list of users and show add button."""
     users = User.query.all()
-    return render_template("index.html", users=users)
+    return render_template("index.html", users = users)
 
-# //the page that brings up the create page
+@app.get("/users/new")
+def user_form():
+    """ shows add new user form."""
 
-@app.post("/create_user")
+    return render_template("new_user.html")
+
+@app.post("/users/new")
 def create_user():
     """Add user information and redirects to user detail page"""
 
@@ -38,3 +42,38 @@ def create_user():
     image_url = request.form['image_url']
 
     user = User(first_name= first_name, last_name=last_name, image_url=image_url)
+
+    db.session.add(user)
+    db.session.commit()
+
+    return redirect("/users")
+
+@app.get("/users/<int:id>")
+def get_user(id):
+    """Gets user information and shows to page"""
+
+    user = User.query.get(id)
+
+    return render_template("user.html", user = user)
+
+@app.get("/users/<int:id>/edit")
+def shows_edit_form(id):
+    """Shows user edit form"""
+
+    user = User.query.get(id)
+
+    return render_template("edit_user.html", user = user)
+
+@app.post("/users/<int:id>/edit")
+def edit_user(id):
+    """Edits user information, updates database, and returns to users page """
+
+    user = User.query.get(id)
+
+    user.first_name = request.form['first_name']
+    user.last_name = request.form['last_name']
+    user.image_url = request.form['image_url']
+
+    db.session.commit()
+
+    return redirect("/users")
