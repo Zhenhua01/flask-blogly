@@ -1,7 +1,8 @@
+from calendar import c
 from unittest import TestCase
 
 from app import app, db
-from models import DEFAULT_IMAGE_URL, User
+from models import User, DEFAULT_IMAGE_URL
 
 # Let's configure our app to use a different database for tests
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogly_test"
@@ -58,9 +59,55 @@ class UserViewTestCase(TestCase):
         db.session.rollback()
 
     def test_list_users(self):
+        """Test the user page"""
         with self.client as c:
             resp = c.get("/users")
             self.assertEqual(resp.status_code, 200)
             html = resp.get_data(as_text=True)
             self.assertIn("test_first", html)
             self.assertIn("test_last", html)
+
+    def test_create_user(self):
+        """Test the add user form"""
+        with self.client as c:
+            resp = c.post("/users/new", data=
+            {"first_name": "test_first3",
+            "last_name":"test_last3",
+            "image_url":DEFAULT_IMAGE_URL},
+            follow_redirects=True)
+
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("test_first3", html)
+            self.assertIn("test_last3", html)
+
+    def test_edit_user(self):
+        """Test the edit user form"""
+        with self.client as c:
+            resp = c.post(f"/users/{self.user_id}/edit", data=
+            {"first_name": "test_first_edit",
+            "last_name":"test_last_edit",
+            "image_url":DEFAULT_IMAGE_URL},
+            follow_redirects=True)
+
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("test_first_edit", html)
+            self.assertIn("test_last_edit", html)
+
+    def test_delete_user(self):
+        """Test the delete user button"""
+        with self.client as c:
+            resp = c.post(f"/users/{self.user_id}/delete",
+            follow_redirects=True)
+
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertNotIn("test_first_edit", html)
+            self.assertNotIn("test_last_edit", html)
+
+
+
+
+
+
