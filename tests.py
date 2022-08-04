@@ -1,4 +1,3 @@
-from calendar import c
 from unittest import TestCase
 
 from app import app, db
@@ -46,9 +45,6 @@ class UserViewTestCase(TestCase):
             image_url=None,
         )
 
-        # db.session.add_all([test_user, second_user])
-        # db.session.commit()
-
         db.session.add_all([test_user, second_user])
         db.session.commit()
 
@@ -64,13 +60,7 @@ class UserViewTestCase(TestCase):
             user_id = test_user.id,
         )
 
-        second_post = Post(
-            title = "test_title_two",
-            content = "test_content_two",
-            user_id = second_user.id,
-        )
-
-        db.session.add_all([test_post, second_post])
+        db.session.add_all([test_post])
         db.session.commit()
 
         self.post_id = test_post.id
@@ -128,7 +118,7 @@ class UserViewTestCase(TestCase):
             self.assertNotIn("test_first_edit", html)
             self.assertNotIn("test_last_edit", html)
 
-    def test_user_detail(self):
+    def test_post_listing_for_user(self):
         """Test showing user with post lists """
 
         with self.client as c:
@@ -139,13 +129,17 @@ class UserViewTestCase(TestCase):
             self.assertIn("test_title", html)
 
     def test_create_post(self):
-        """Test the add user form"""
+        """Test the add post form"""
         with self.client as c:
-            resp = c.post(f"/users/{self.user_id}/posts/new", data=
-            {"title": "test_title_3",
-            "content":"test_content_3",
-            "user_id": self.user_id},
-            follow_redirects=True)
+            resp = c.post(
+                f"/users/{self.user_id}/posts/new",
+                data={
+                    "title": "test_title_3",
+                    "content":"test_content_3",
+                    "user_id": self.user_id
+                },
+                follow_redirects=True
+            )
 
             self.assertEqual(resp.status_code, 200)
             html = resp.get_data(as_text=True)
