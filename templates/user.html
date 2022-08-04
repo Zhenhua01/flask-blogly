@@ -3,16 +3,18 @@
 
 {% block content %}
 
-<h1>{{ user.first_name }} {{ user.last_name }}</h1>
+<h1>{{ user.get_full_name() }}</h1>
 
-<img src="{{ user.image_url }}" width = 100px height = 100px alt="photo">
+<img src="{{ user.image_url }}" width = 200px height = 200px alt="photo">
 
 <form action="/users/{{ user.id }}/edit">
-  <button type="submit">Edit</button>
+  <button class="btn btn-primary" type="submit">Edit</button>
 </form>
 
 <form action="/users/{{ user.id }}/delete" method="POST">
-  <button type="submit">Delete</button>
+  <button class="btn btn-primary" type="submit">Delete</button>
 </form>
+
+<div> <a class="btn btn-primary" href="/"> Home </a> </div>
 
 {% endblock %}

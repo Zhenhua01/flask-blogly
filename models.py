@@ -18,3 +18,14 @@ class User(db.Model):
     first_name = db.Column(db.String(50), nullable = False)
     last_name = db.Column(db.String(50), nullable = False)
     image_url = db.Column(db.Text, default= DEFAULT_IMAGE_URL)
+
+    def get_full_name(self):
+        """Returns full name of user  """
+
+        return f"{self.first_name} {self.last_name}"
+
+    @classmethod
+    def full_name(cls):
+        """Returns full name of user as a property"""
+
+        return f"{User.first_name} {User.last_name}"

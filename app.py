@@ -24,7 +24,11 @@ def homepage():
 @app.get("/users")
 def list_users():
     """ shows user homepage with list of users and show add button."""
-    users = User.query.all()
+
+    #users = User.query.all()
+
+    users = User.query.order_by('last_name', 'first_name')
+
     return render_template("index.html", users = users)
 
 @app.get("/users/new")
@@ -74,7 +78,7 @@ def edit_user(id):
     user.first_name = request.form['first_name']
     user.last_name = request.form['last_name']
     user.image_url = request.form['image_url']
-#flash messages for redirects
+    #flash messages for redirects
     db.session.commit()
 
     return redirect("/users")
