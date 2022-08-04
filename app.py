@@ -32,7 +32,7 @@ def list_users():
     return render_template("index.html", users = users)
 
 @app.get("/users/new")
-def shows_user_form():
+def show_new_user_form():
     """ shows add new user form."""
 
     return render_template("new_user.html")
@@ -63,7 +63,7 @@ def get_user(id):
     return render_template("user.html", user = user, posts = posts)
 
 @app.get("/users/<int:id>/edit")
-def shows_edit_form(id):
+def show_user_edit_form(id):
     """Shows user edit form"""
 
     user = User.query.get_or_404(id)
@@ -79,7 +79,7 @@ def edit_user(id):
     user.first_name = request.form['first_name']
     user.last_name = request.form['last_name']
     user.image_url = request.form['image_url']
-    #flash messages for redirects
+
     db.session.commit()
 
     return redirect("/users")
@@ -96,7 +96,7 @@ def delete_user(id):
     return redirect("/users")
 
 @app.get("/users/<int:id>/posts/new")
-def shows_post_form(id):
+def show_post_form(id):
     """ shows add new post form for user."""
 
     user = User.query.get_or_404(id)
@@ -118,5 +118,40 @@ def add_post(id):
 
 
 @app.get("/posts/<int:id>")
-def shows_post(id):
+def show_post(id):
+    """Gets post content and shows to page """
+
+    post = Post.query.get_or_404(id)
+
+    return render_template("post.html", post = post)
+
+@app.get("/posts/<int:id>/edit")
+def show_post_edit_form(id):
+    """ Shows post edit form """
+
+    post = Post.query.get_or_404(id)
+
+    return render_template("edit_post.html", post = post)
+
+@app.post("/posts/<int:id>/edit")
+def edit_post(id):
+
+    post = Post.query.get_or_404(id)
+
+    post.title = request.form['title']
+    post.content = request.form['content']
+
+    db.session.commit()
+
+    return redirect(f"/posts/{id}")
+
+@app.post("/posts/<int:id>/delete")
+def delete_post(id):
+
+    post = Post.query.get_or_404(id)
+
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect(f"/users/{post.user_id}")
 
