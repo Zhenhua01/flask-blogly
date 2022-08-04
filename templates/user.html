@@ -7,12 +7,21 @@
 
 <img src="{{ user.image_url }}" width = 200px height = 200px alt="photo">
 
-<form action="/users/{{ user.id }}/edit">
-  <button class="btn btn-primary" type="submit">Edit</button>
-</form>
+<div> <a class="btn btn-primary" href="/users/{{ user.id }}/edit"> Edit </a> </div>
 
 <form action="/users/{{ user.id }}/delete" method="POST">
   <button class="btn btn-primary" type="submit">Delete</button>
 </form>
+
+
+<h1>Posts</h1>
+
+{% for post in posts %}
+
+<li><a href="/posts/{{ post.id }}">{{ post.title }}</a></li>
+
+{% endfor %}
+
+<div> <a class="btn btn-primary" href="/users/{{ user.id }}/posts/new"> Add Post </a> </div>
 
 {% endblock %}

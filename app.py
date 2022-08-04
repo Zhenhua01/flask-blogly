@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, request, redirect, render_template
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
@@ -58,8 +58,9 @@ def get_user(id):
     """Gets user information and shows to page"""
 
     user = User.query.get_or_404(id)
+    posts = user.posts
 
-    return render_template("user.html", user = user)
+    return render_template("user.html", user = user, posts = posts)
 
 @app.get("/users/<int:id>/edit")
 def shows_edit_form(id):
@@ -93,3 +94,29 @@ def delete_user(id):
     db.session.commit()
 
     return redirect("/users")
+
+@app.get("/users/<int:id>/posts/new")
+def shows_post_form(id):
+    """ shows add new post form for user."""
+
+    user = User.query.get_or_404(id)
+
+    return render_template("new_post.html", user = user)
+
+@app.post("/users/<int:id>/posts/new")
+def add_post(id):
+    """Add post to user, redirects to user page"""
+
+    title = request.form['title']
+    content = request.form['content']
+
+    post = Post(title=title, content=content, user_id=id)
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(f"/users/{id}")
+
+
+@app.get("/posts/<int:id>")
+def shows_post(id):
+
