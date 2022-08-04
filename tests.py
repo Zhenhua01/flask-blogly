@@ -19,7 +19,7 @@ app.config['DEBUG_TB_HOSTS'] = ['dont-show-debug-toolbar']
 
 db.create_all()
 
-
+# try separate test case for PostView
 class UserViewTestCase(TestCase):
     """Test views for users."""
 

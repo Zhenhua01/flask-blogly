@@ -95,6 +95,7 @@ def delete_user(id):
 
     return redirect("/users")
 
+# try using post_id and user_id in url route
 @app.get("/users/<int:id>/posts/new")
 def show_post_form(id):
     """ shows add new post form for user."""
@@ -114,6 +115,7 @@ def add_post(id):
     db.session.add(post)
     db.session.commit()
 
+    # add redirect flash message for confirmation
     return redirect(f"/users/{id}")
 
 
@@ -153,5 +155,6 @@ def delete_post(id):
     db.session.delete(post)
     db.session.commit()
 
+    # add redirect flash message for confirmation
     return redirect(f"/users/{post.user_id}")
 
