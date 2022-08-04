@@ -24,8 +24,9 @@ class User(db.Model):
 
         return f"{self.first_name} {self.last_name}"
 
-    @classmethod
-    def full_name(cls):
-        """Returns full name of user as a property"""
+    @property
+    def full_name(self):
+        """ Set full_name as a property attribute and returns it"""
+        
+        return f"{self.first_name} {self.last_name}"
 
-        return f"{User.first_name} {User.last_name}"
