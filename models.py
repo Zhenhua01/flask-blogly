@@ -16,7 +16,7 @@ class User(db.Model):
 
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True) #is auto increment default
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     image_url = db.Column(db.Text, default=DEFAULT_IMAGE_URL)
@@ -42,7 +42,8 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False,)
 
-    users = db.relationship('User', backref='posts')
+    user = db.relationship('User', backref='posts')
+
     tags = db.relationship('Tag', secondary='post_tags', backref='posts')
 
 class Tag(db.Model):
@@ -52,7 +53,7 @@ class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
 
-    # here or line 46
+    # sim to line 47 (only need one due to backref)
     # posts = db.relationship('Post', secondary='post_tags', backref='tags')
 
 class PostTag(db.Model):
@@ -62,5 +63,5 @@ class PostTag(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
     tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
 
-    # post = db.relationship('Post', backref='post_tags')
-    # tag = db.relationship('Tag', backref='post_tags')
+    post = db.relationship('Post', backref='post_tags')
+    tag = db.relationship('Tag', backref='post_tags')

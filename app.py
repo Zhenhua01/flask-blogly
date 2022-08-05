@@ -2,7 +2,6 @@
 
 from flask import Flask, request, redirect, render_template
 from models import db, connect_db, User, Post, Tag, PostTag
-from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
@@ -26,8 +25,7 @@ def homepage():
 def list_users():
     """ shows user homepage with list of users and show add button."""
 
-    #users = User.query.all()
-
+    # query users list and orders them before returning
     users = User.query.order_by('last_name', 'first_name')
 
     return render_template("index.html", users = users)
@@ -122,7 +120,6 @@ def add_post(id):
 
     # add redirect flash message for confirmation
     return redirect(f"/users/{id}")
-
 
 @app.get("/posts/<int:id>")
 def show_post(id):
