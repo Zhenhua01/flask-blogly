@@ -7,7 +7,7 @@
 
 <p>Post: {{ post.content }}</p>
 
-<p>By: {{ post.user.full_name }} at {{ post.created_at }} </p>
+<p>By: {{ post.user.full_name }} at {{ time }} </p>
 
 <div> <a class="btn btn-primary" href="/posts/{{ post.id }}/edit"> Edit </a> </div>
 
